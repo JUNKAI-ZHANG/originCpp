@@ -1,81 +1,100 @@
-//#pragma GCC optimize(3)
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
-#define pii pair<int,int>
-#define ls (p<<1)
-#define rs (p<<1|1)
-#define mid ((l+r)>>1)
-#define code(i, j) ((i - 1) * m + j)
-#define all(x) (x).begin(),(x).end()
-#define all1(x) (x).begin()+1,(x).end()
-#define fi first
-#define se second
-#define ctz __builtin_ctzll
-#define ppc __builtin_popcountll
-typedef long long LL;
-typedef unsigned long long ull;
-typedef double db;
-const int maxn=3e6+10;
-const int maxm=2e7+10;
-const int mod=1e9 + 7;
-const int inf= 0x3f3f3f3f;
-const int dx[] = {-2, -2, -1, 1, 2, 2, -1, 1}, dy[] = {-1, 1, 2, 2, 1, -1, -2, -2};
-const db pi=acosl(-1);
-const db eps = 1e-6;
-const int di[]={-1, 0, 1, 0, -1};
-const int dir[6][3] ={{0, -1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, -1}, {1, 0, 0}, {-1, 0, 0}};
-//----------------------------------------------------//
+using ll = long long;
 
-void slove() {
-    int n, m, h, w;
-    cin >> n >> m >> h >> w;
-
-    if(n % h == 0 && m % w == 0) {
-        cout << "N" << '\n';
-        return ;
-    }
-
-    vector<vector<int>> a(n,vector<int>(m,0));
-    cout << "Y\n";
-    if(m % w != 0) {
-        int ws = - (1e5 * (w - 1) + 1);
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<m;j++) {
-                if((j+1)%w==0) {
-                    a[i][j] = ws;
-                }else {
-                    a[i][j] = 1e5;
-                }
-            }
-        }
-    } else {
-        int ws = - (1e5 * (h - 1) + 1);
-        for(int j=0;j<m;j++) {
-            for(int i=0;i<n;i++) {
-                if((i+1)%h == 0) {
-                    a[i][j] = ws;
-                } else {
-                    a[i][j] = 1e5;
-                }
-            }
-        }
-    }
-
-    for(int i=0;i<n;i++) {
-        for(int j=0;j<m;j++) {
-            cout << a[i][j] << " \n"[j==m-1];
-        }
+void merge(map<int, int>&a, const map<int, int>& b) {
+    for(const auto&[x, y] : b) {
+        a[x] += y;
     }
 }
-int main() {
-    ios::sync_with_stdio(0),cin.tie(0);
-    cout << fixed << setprecision(3);
 
-    int t = 1;
-    //cin >> t;
-    while(t -- ) {
-        slove();
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n;
+    cin >> n;
+    vector<vector<int>> g(n + 1);
+    for(int i = 1; i < n; i++) {
+        int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    vector<int> leaf, pa(n + 1, 0), cnt(n + 1, 0);
+    function<void(int, int, int)> dfs = [&](int x, int fa, int dep) {
+        int ok = 0;
+        pa[x] = fa;
+        for(int to : g[x]) {
+            if(to == fa) continue;
+            ok = 1;
+            dfs(to, x, dep + 1);
+        }
+        if(ok == 0) {
+            leaf.push_back(x);
+            cnt[x]++;
+        }
+    };
+    dfs(1, 0, 0);
+    if(n == 1) return cout << 0 << '\n' , 0;
+    for(int ans = 1; ans <= n; ans++) {
+        queue<int> q;
+        vector<int> vis(n + 1);
+        for(int i : leaf) {
+            q.push(i);
+            vis[i] = 1;
+        }
+        while(q.size()) {
+            int x = q.front();
+            q.pop();
+            if(x != 1) vis[x] = 0;
+            if(pa[x] && cnt[x]) {
+                cnt[x]--;
+                cnt[pa[x]]++;
+            }
+            else if(cnt[x] == 0 && vis[pa[x]] == 0) {
+                q.push(pa[x]);
+                vis[pa[x]] = 1;
+            }
+        }
+        if(cnt[1] == leaf.size()) {
+            return cout << ans << '\n', 0;
+        }
     }
 
     return 0;
 }
+/*
+ 6
+ 1 2
+ 1 3
+ 2 4
+ 2 5
+ 5 6
+
+ ans = 3
+
+ 7
+1 2
+1 3
+2 4
+2 5
+3 6
+3 7
+
+ ans = 3
+
+ 10
+1 2
+1 3
+2 4
+2 5
+4 6
+4 7
+4 8
+6 9
+6 10
+
+ ans = 6
+ */
