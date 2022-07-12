@@ -55,6 +55,12 @@ build CMakeFiles/jkHome.dir/main.cpp.o: CXX_COMPILER__jkHome_Debug /Users/jkxy/C
   OBJECT_DIR = CMakeFiles/jkHome.dir
   OBJECT_FILE_DIR = CMakeFiles/jkHome.dir
 
+build CMakeFiles/jkHome.dir/swp.cpp.o: CXX_COMPILER__jkHome_Debug /Users/jkxy/CLionProjects/jkHome/swp.cpp || cmake_object_order_depends_target_jkHome
+  DEP_FILE = CMakeFiles/jkHome.dir/swp.cpp.o.d
+  FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.3
+  OBJECT_DIR = CMakeFiles/jkHome.dir
+  OBJECT_FILE_DIR = CMakeFiles/jkHome.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target jkHome
@@ -63,7 +69,7 @@ build CMakeFiles/jkHome.dir/main.cpp.o: CXX_COMPILER__jkHome_Debug /Users/jkxy/C
 #############################################
 # Link the executable jkHome
 
-build jkHome: CXX_EXECUTABLE_LINKER__jkHome_Debug CMakeFiles/jkHome.dir/main.cpp.o
+build jkHome: CXX_EXECUTABLE_LINKER__jkHome_Debug CMakeFiles/jkHome.dir/main.cpp.o CMakeFiles/jkHome.dir/swp.cpp.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.3
   OBJECT_DIR = CMakeFiles/jkHome.dir
   POST_BUILD = :
